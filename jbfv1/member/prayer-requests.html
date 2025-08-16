@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grace Community Church - Prayer Requests</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Same CSS as dashboard.html */
+        :root {
+            --primary: #6d4c41;
+            --secondary: #8d6e63;
+            --accent: #d7ccc8;
+            --light: #efebe9;
+            --dark: #3e2723;
+            --text: #333;
+            --white: #fff;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --info: #2196f3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text);
+            background-color: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, rgba(109, 76, 65, 0.95) 0%, rgba(61, 39, 35, 0.95) 100%);
+            color: var(--white);
+            padding: 1.5rem 0;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-logo i {
+            font-size: 2rem;
+            margin-right: 0.75rem;
+            color: var(--accent);
+        }
+
+        .sidebar-logo-text h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .sidebar-logo-text p {
+            font-size: 0.75rem;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .user-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .user-info p {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .sidebar-menu {
+            padding: 0 1rem;
+        }
+
+        .menu-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin: 1.5rem 0 0.75rem;
+            padding-left: 0.5rem;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 5px;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item i {
+            width: 24px;
+            margin-right: 0.75rem;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .menu-item span {
+            font-size: 0.9rem;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+        }
+
+        .menu-item.active {
+            background-color: var(--accent);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .menu-item.active i {
+            color: var(--primary);
+        }
+
+        .menu-item .badge {
+            margin-left: auto;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 10px;
+            padding: 0.15rem 0.5rem;
+            font-size: 0.7rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid var(--accent);
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(109, 76, 65, 0.1);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-size: 1.25rem;
+            margin-right: 1rem;
+            cursor: pointer;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-dropdown-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .user-dropdown-name {
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .user-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            padding: 0.5rem 0;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(10px);
+        }
+
+        .user-dropdown:hover .user-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--light);
+            color: var(--primary);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--accent);
+            margin: 0.25rem 0;
+        }
+
+        /* Prayer Requests Content */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .page-title p {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .page-actions .btn {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background-color: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .page-actions .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-actions .btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Prayer Requests Tabs */
+        .prayer-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .prayer-tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--secondary);
+            position: relative;
+        }
+
+        .prayer-tab.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .prayer-tab.active:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .prayer-tab-badge {
+            margin-left: 0.5rem;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 10px;
+            padding: 0.15rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: normal;
+        }
+
+        /* Prayer Requests List */
+        .prayer-requests {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .prayer-item {
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background-color: var(--light);
+            transition: all 0.3s ease;
+        }
+
+        .prayer-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .prayer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .prayer-user {
+            display: flex;
+            align-items: center;
+        }
+
+        .prayer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .prayer-user-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .prayer-user-info p {
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
+        .prayer-date {
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
+        .prayer-content {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            padding-left: 56px; /* avatar width + margin */
+        }
+
+        .prayer-actions {
+            display: flex;
+            align-items: center;
+            padding-left: 56px;
+        }
+
+        .prayer-action {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 1.5rem;
+            color: var(--secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .prayer-action:hover {
+            color: var(--primary);
+        }
+
+        .prayer-action i {
+            margin-right: 0.5rem;
+        }
+
+        .prayer-count {
+            font-weight: 600;
+            color: var(--primary);
+            margin-left: 0.25rem;
+        }
+
+        /* Prayer Request Form */
+        .prayer-form {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(109, 76, 65, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .form-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-btn.primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .form-btn.primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .form-btn.secondary {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+
+        .form-btn.secondary:hover {
+            background-color: var(--light);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 220px;
+            }
+            
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .prayer-content,
+            .prayer-actions {
+                padding-left: 0;
+            }
+            
+            .prayer-user {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .prayer-avatar {
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-bar {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .page-actions {
+                margin-top: 1rem;
+                width: 100%;
+            }
+            
+            .page-actions .btn {
+                display: block;
+                text-align: center;
+            }
+            
+            .prayer-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 0.5rem;
+            }
+            
+            .prayer-tab {
+                padding: 0.5rem 1rem;
+            }
+            
+            .prayer-actions {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .prayer-action {
+                margin-right: 0.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .prayer-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .prayer-date {
+                margin-top: 0.5rem;
+                align-self: flex-end;
+            }
+            
+            .form-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .form-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Mobile Menu Toggle -->
+        <div class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-church"></i>
+                    <div class="sidebar-logo-text">
+                        <h2>Grace Community</h2>
+                        <p>Prayer Requests</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <h4>John Doe</h4>
+                    <p>Member since 2020</p>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <p class="menu-title">Main</p>
+                <a href="dashboard.html" class="menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="events.html" class="menu-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Events</span>
+                </a>
+                <a href="sermons.html" class="menu-item">
+                    <i class="fas fa-video"></i>
+                    <span>Sermons</span>
+                </a>
+                <a href="giving.html" class="menu-item">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span>Giving</span>
+                </a>
+                
+                <p class="menu-title">Community</p>
+                <a href="groups.html" class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Groups</span>
+                </a>
+                <a href="prayer-requests.html" class="menu-item active">
+                    <i class="fas fa-pray"></i>
+                    <span>Prayer Requests</span>
+                    <span class="badge">3</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Serving</span>
+                </a>
+                
+                <p class="menu-title">Personal</p>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search prayer requests...">
+                </div>
+                
+                <div class="user-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">2</span>
+                    </button>
+                    
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-avatar">JD</div>
+                        <span class="user-dropdown-name">John Doe</span>
+                        <i class="fas fa-chevron-down"></i>
+                        
+                        <div class="user-dropdown-menu">
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user mr-2"></i> My Profile
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog mr-2"></i> Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>Prayer Requests</h1>
+                    <p>Share your prayer needs and pray for others in our community</p>
+                </div>
+                <div class="page-actions">
+                    <a href="#" class="btn">
+                        <i class="fas fa-plus"></i> New Request
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Prayer Request Form (Initially hidden) -->
+            <div class="prayer-form" id="prayerForm" style="display: none;">
+                <h3 class="form-title">Share Your Prayer Request</h3>
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-control" placeholder="Brief title for your request">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Request</label>
+                    <textarea class="form-control" placeholder="Share your prayer need here..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Privacy</label>
+                    <select class="form-control">
+                        <option>Share with church members</option>
+                        <option>Share with prayer team only</option>
+                        <option>Share anonymously</option>
+                    </select>
+                </div>
+                <div class="form-footer">
+                    <button class="form-btn secondary" id="cancelRequest">
+                        Cancel
+                    </button>
+                    <button class="form-btn primary">
+                        Submit Request
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Prayer Requests Tabs -->
+            <div class="prayer-tabs">
+                <div class="prayer-tab active">All Requests</div>
+                <div class="prayer-tab">My Requests</div>
+                <div class="prayer-tab">Recent</div>
+                <div class="prayer-tab">Urgent <span class="prayer-tab-badge">2</span></div>
+                <div class="prayer-tab">Answered</div>
+            </div>
+            
+            <!-- Prayer Requests List -->
+            <div class="prayer-requests">
+                <div class="prayer-item">
+                    <div class="prayer-header">
+                        <div class="prayer-user">
+                            <div class="prayer-avatar">SM</div>
+                            <div class="prayer-user-info">
+                                <h4>Sarah Miller</h4>
+                                <p>Member since 2018</p>
+                            </div>
+                        </div>
+                        <div class="prayer-date">June 12, 2023</div>
+                    </div>
+                    <div class="prayer-content">
+                        <p>Please pray for my father who is undergoing heart surgery this Thursday. The doctors found a blockage that needs to be addressed immediately. We're trusting God for a successful procedure and quick recovery.</p>
+                    </div>
+                    <div class="prayer-actions">
+                        <div class="prayer-action">
+                            <i class="fas fa-pray"></i> Prayed <span class="prayer-count">12</span>
+                        </div>
+                        <div class="prayer-action">
+                            <i class="far fa-comment"></i> Comments <span class="prayer-count">5</span>
+                        </div>
+                        <div class="prayer-action">
+                            <i class="fas fa-share-alt"></i> Share
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="prayer-item">
+                    <div class="prayer-header">
+                        <div class="prayer-user">
+                            <div class="prayer-avatar">RJ</div>
+                            <div class="prayer-user-info">
+                                <h4>Robert Johnson</h4>
+                                <p>Member since 2021</p>
+                            </div>
+                        </div>
+                        <div class="prayer-date">June 10, 2023</div>
+                    </div>
+                    <div class="prayer-content">
+                        <p>I was unexpectedly laid off from my job last week. Please pray for God's provision and guidance as I search for new employment. Also pray for peace for my family during this transition.</p>
+                    </div>
+                    <div class="prayer-actions">
+                        <div class="prayer-action">
+                            <i class="fas fa-pray"></i> Prayed <span class="prayer-count">8</span>
+                        </div>
+                        <div class="prayer-action">
+                            <i class="far fa-comment"></i> Comments <span class="prayer-count">3</span>
+                        </div>
+                        <div class="prayer-action">
+                            <i class="fas fa-share-alt"></i> Share
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="prayer-item">
+                    <div class="prayer-header">
+                        <div class="prayer-user">
+                            <div class="prayer-avatar">AL</div>
+                            <div class="prayer-user-info">
+                                <h4>Anonymous</h4>
+                                <p>Prayer Team</p>
+                            </div>
+                        </div>
+                        <div class="prayer-date">June 8, 2023</div>
+                    </div>
+                    <div class="prayer-content">
+                        <p>Urgent: Please pray for a family in our church who lost their home in a fire last night. Everyone is safe but they've lost nearly all their possessions. Pray for God's comfort and provision.</p>
+                    </div>
+                    <div class="prayer-actions">
+                        <div class="prayer-action">
+                            <i class="fas fa-pray"></i> Prayed <span class="prayer-count">24</span>
+                        </div>
+                        <div class="prayer-action">
+                            <i class="far fa-comment"></i> Comments <span class="prayer-count">7</span>
+                        </div>
+                        <div class="prayer-action">
+                            <i class="fas fa-share-alt"></i> Share
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="prayer-item">
+                    <div class="prayer-header">
+                        <div class="prayer-user">
+                            <div class="prayer-avatar">PT</div>
+                            <div class="prayer-user-info">
+                                <h4>Prayer Team</h4>
+                                <p>Church Staff</p>
+                            </div>
+                        </div>
+                        <div class="prayer-date">June 5, 2023</div>
+                    </div>
+                    <div class="prayer-content">
+                        <p>Update: Thank you for praying for baby Emily's surgery. The doctors are very pleased with how everything went and she's recovering well! Please continue to pray for complete healing.</p>
+                    </div>
+                    <div class="prayer-actions">
+                        <div class="prayer-action">
+                            <i class="fas fa-pray"></i> Prayed <span class="prayer-count">18</span>
+                        </div>
+                        <div class="prayer-action">
+                            <i class="far fa-comment"></i> Comments <span class="prayer-count">9</span>
+                        </div>
+                        <div class="prayer-action">
+                            <i class="fas fa-share-alt"></i> Share
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            mobileMenuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', function(event) {
+                if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            });
+            
+            sidebar.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+            
+            // Prayer request form toggle
+            const newRequestBtn = document.querySelector('.page-actions .btn');
+            const prayerForm = document.getElementById('prayerForm');
+            const cancelRequest = document.getElementById('cancelRequest');
+            
+            newRequestBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                prayerForm.style.display = 'block';
+                window.scrollTo({ top: prayerForm.offsetTop - 20, behavior: 'smooth' });
+            });
+            
+            cancelRequest.addEventListener('click', function(e) {
+                e.preventDefault();
+                prayerForm.style.display = 'none';
+            });
+            
+            // Tab switching
+            const prayerTabs = document.querySelectorAll('.prayer-tab');
+            prayerTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    prayerTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    // Here you would typically load different prayer requests
+                });
+            });
+        });
+    </script>
+</body>
+</html>

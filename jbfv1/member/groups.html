@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grace Community Church - Groups</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Same CSS as dashboard.html */
+        :root {
+            --primary: #6d4c41;
+            --secondary: #8d6e63;
+            --accent: #d7ccc8;
+            --light: #efebe9;
+            --dark: #3e2723;
+            --text: #333;
+            --white: #fff;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --info: #2196f3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text);
+            background-color: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, rgba(109, 76, 65, 0.95) 0%, rgba(61, 39, 35, 0.95) 100%);
+            color: var(--white);
+            padding: 1.5rem 0;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-logo i {
+            font-size: 2rem;
+            margin-right: 0.75rem;
+            color: var(--accent);
+        }
+
+        .sidebar-logo-text h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .sidebar-logo-text p {
+            font-size: 0.75rem;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .user-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .user-info p {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .sidebar-menu {
+            padding: 0 1rem;
+        }
+
+        .menu-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin: 1.5rem 0 0.75rem;
+            padding-left: 0.5rem;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 5px;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item i {
+            width: 24px;
+            margin-right: 0.75rem;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .menu-item span {
+            font-size: 0.9rem;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+        }
+
+        .menu-item.active {
+            background-color: var(--accent);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .menu-item.active i {
+            color: var(--primary);
+        }
+
+        .menu-item .badge {
+            margin-left: auto;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 10px;
+            padding: 0.15rem 0.5rem;
+            font-size: 0.7rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid var(--accent);
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(109, 76, 65, 0.1);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-size: 1.25rem;
+            margin-right: 1rem;
+            cursor: pointer;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-dropdown-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .user-dropdown-name {
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .user-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            padding: 0.5rem 0;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(10px);
+        }
+
+        .user-dropdown:hover .user-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--light);
+            color: var(--primary);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--accent);
+            margin: 0.25rem 0;
+        }
+
+        /* Groups Content */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .page-title p {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .page-actions .btn {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background-color: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .page-actions .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-actions .btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Groups Filter */
+        .groups-filter {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent);
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Groups Grid */
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .group-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .group-image {
+            height: 160px;
+            background-color: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .group-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .group-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .group-info {
+            padding: 1.5rem;
+        }
+
+        .group-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .group-leader {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .group-leader-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            color: var(--primary);
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .group-meta {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .group-meta-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .group-meta-item i {
+            margin-right: 0.25rem;
+        }
+
+        .group-description {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .group-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .group-members {
+            display: flex;
+            align-items: center;
+        }
+
+        .member-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: -0.5rem;
+            border: 2px solid white;
+            color: var(--primary);
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .member-count {
+            font-size: 0.8rem;
+            color: var(--secondary);
+            margin-left: 0.5rem;
+        }
+
+        .group-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .group-btn.primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .group-btn.primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .group-btn.outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .group-btn.outline:hover {
+            background-color: var(--light);
+        }
+
+        /* My Groups Section */
+        .my-groups {
+            margin-top: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 220px;
+            }
+            
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .groups-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-bar {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .page-actions {
+                margin-top: 1rem;
+                width: 100%;
+            }
+            
+            .page-actions .btn {
+                display: block;
+                text-align: center;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .filter-group {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .groups-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .group-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .group-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Mobile Menu Toggle -->
+        <div class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-church"></i>
+                    <div class="sidebar-logo-text">
+                        <h2>Grace Community</h2>
+                        <p>Groups Network</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <h4>John Doe</h4>
+                    <p>Member since 2020</p>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <p class="menu-title">Main</p>
+                <a href="dashboard.html" class="menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="events.html" class="menu-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Events</span>
+                </a>
+                <a href="sermons.html" class="menu-item">
+                    <i class="fas fa-video"></i>
+                    <span>Sermons</span>
+                </a>
+                <a href="giving.html" class="menu-item">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span>Giving</span>
+                </a>
+                
+                <p class="menu-title">Community</p>
+                <a href="groups.html" class="menu-item active">
+                    <i class="fas fa-users"></i>
+                    <span>Groups</span>
+                </a>
+                <a href="prayer-requests.html" class="menu-item">
+                    <i class="fas fa-pray"></i>
+                    <span>Prayer Requests</span>
+                    <span class="badge">3</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Serving</span>
+                </a>
+                
+                <p class="menu-title">Personal</p>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search groups...">
+                </div>
+                
+                <div class="user-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">2</span>
+                    </button>
+                    
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-avatar">JD</div>
+                        <span class="user-dropdown-name">John Doe</span>
+                        <i class="fas fa-chevron-down"></i>
+                        
+                        <div class="user-dropdown-menu">
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user mr-2"></i> My Profile
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog mr-2"></i> Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>Groups</h1>
+                    <p>Connect with others through our small groups and ministries</p>
+                </div>
+                <div class="page-actions">
+                    <a href="#" class="btn">
+                        <i class="fas fa-plus"></i> Start a Group
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Groups Filter -->
+            <div class="groups-filter">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Group Type</label>
+                        <select class="filter-select">
+                            <option>All Group Types</option>
+                            <option>Life Groups</option>
+                            <option>Bible Studies</option>
+                            <option>Men's Groups</option>
+                            <option>Women's Groups</option>
+                            <option>Youth Groups</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Location</label>
+                        <select class="filter-select">
+                            <option>All Locations</option>
+                            <option>On Campus</option>
+                            <option>Northside</option>
+                            <option>Southside</option>
+                            <option>Eastside</option>
+                            <option>Westside</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Meeting Day</label>
+                        <select class="filter-select">
+                            <option>Any Day</option>
+                            <option>Sunday</option>
+                            <option>Monday</option>
+                            <option>Tuesday</option>
+                            <option>Wednesday</option>
+                            <option>Thursday</option>
+                            <option>Friday</option>
+                            <option>Saturday</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Groups Grid -->
+            <div class="groups-grid">
+                <div class="group-card">
+                    <div class="group-image">
+                        <img src="https://source.unsplash.com/random/400x300/?bible" alt="Group image">
+                        <span class="group-badge">Life Group</span>
+                    </div>
+                    <div class="group-info">
+                        <h3 class="group-name">Young Adults Life Group</h3>
+                        <div class="group-leader">
+                            <div class="group-leader-avatar">MJ</div>
+                            <span>Led by Mark Johnson</span>
+                        </div>
+                        <div class="group-meta">
+                            <div class="group-meta-item">
+                                <i class="fas fa-map-marker-alt"></i> Northside
+                            </div>
+                            <div class="group-meta-item">
+                                <i class="far fa-clock"></i> Wed, 7:00 PM
+                            </div>
+                        </div>
+                        <p class="group-description">
+                            A community for young adults (18-30) to grow in faith, build relationships, and navigate life together.
+                        </p>
+                        <div class="group-actions">
+                            <div class="group-members">
+                                <div class="member-avatar">JD</div>
+                                <div class="member-avatar">SM</div>
+                                <div class="member-avatar">RJ</div>
+                                <span class="member-count">+12 more</span>
+                            </div>
+                            <a href="#" class="group-btn primary">Join Group</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group-card">
+                    <div class="group-image">
+                        <i class="fas fa-bible"></i>
+                        <span class="group-badge">Bible Study</span>
+                    </div>
+                    <div class="group-info">
+                        <h3 class="group-name">Romans Bible Study</h3>
+                        <div class="group-leader">
+                            <div class="group-leader-avatar">PS</div>
+                            <span>Led by Pastor Smith</span>
+                        </div>
+                        <div class="group-meta">
+                            <div class="group-meta-item">
+                                <i class="fas fa-map-marker-alt"></i> Church Campus
+                            </div>
+                            <div class="group-meta-item">
+                                <i class="far fa-clock"></i> Sun, 9:00 AM
+                            </div>
+                        </div>
+                        <p class="group-description">
+                            Deep dive into Paul's letter to the Romans. All are welcome for this 12-week study.
+                        </p>
+                        <div class="group-actions">
+                            <div class="group-members">
+                                <div class="member-avatar">AL</div>
+                                <div class="member-avatar">PT</div>
+                                <div class="member-avatar">KW</div>
+                                <span class="member-count">+8 more</span>
+                            </div>
+                            <a href="#" class="group-btn outline">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group-card">
+                    <div class="group-image">
+                        <img src="https://source.unsplash.com/random/400x300/?men" alt="Group image">
+                        <span class="group-badge">Men's Group</span>
+                    </div>
+                    <div class="group-info">
+                        <h3 class="group-name">Iron Sharpens Iron</h3>
+                        <div class="group-leader">
+                            <div class="group-leader-avatar">DW</div>
+                            <span>Led by David Wilson</span>
+                        </div>
+                        <div class="group-meta">
+                            <div class="group-meta-item">
+                                <i class="fas fa-map-marker-alt"></i> Westside
+                            </div>
+                            <div class="group-meta-item">
+                                <i class="far fa-clock"></i> Sat, 8:00 AM
+                            </div>
+                        </div>
+                        <p class="group-description">
+                            Men's breakfast and Bible study focused on building godly character and leadership.
+                        </p>
+                        <div class="group-actions">
+                            <div class="group-members">
+                                <div class="member-avatar">JD</div>
+                                <div class="member-avatar">RJ</div>
+                                <span class="member-count">+5 more</span>
+                            </div>
+                            <a href="#" class="group-btn primary">Join Group</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group-card">
+                    <div class="group-image">
+                        <img src="https://source.unsplash.com/random/400x300/?women" alt="Group image">
+                        <span class="group-badge">Women's Group</span>
+                    </div>
+                    <div class="group-info">
+                        <h3 class="group-name">Women of Faith</h3>
+                        <div class="group-leader">
+                            <div class="group-leader-avatar">SM</div>
+                            <span>Led by Sarah Miller</span>
+                        </div>
+                        <div class="group-meta">
+                            <div class="group-meta-item">
+                                <i class="fas fa-map-marker-alt"></i> Southside
+                            </div>
+                            <div class="group-meta-item">
+                                <i class="far fa-clock"></i> Tue, 6:30 PM
+                            </div>
+                        </div>
+                        <p class="group-description">
+                            A safe space for women to grow spiritually, share life, and support one another.
+                        </p>
+                        <div class="group-actions">
+                            <div class="group-members">
+                                <div class="member-avatar">AL</div>
+                                <div class="member-avatar">KW</div>
+                                <span class="member-count">+7 more</span>
+                            </div>
+                            <a href="#" class="group-btn outline">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group-card">
+                    <div class="group-image">
+                        <i class="fas fa-hands-helping"></i>
+                        <span class="group-badge">Serving</span>
+                    </div>
+                    <div class="group-info">
+                        <h3 class="group-name">Community Outreach Team</h3>
+                        <div class="group-leader">
+                            <div class="group-leader-avatar">PT</div>
+                            <span>Led by Prayer Team</span>
+                        </div>
+                        <div class="group-meta">
+                            <div class="group-meta-item">
+                                <i class="fas fa-map-marker-alt"></i> Various
+                            </div>
+                            <div class="group-meta-item">
+                                <i class="far fa-clock"></i> Monthly
+                            </div>
+                        </div>
+                        <p class="group-description">
+                            Join us as we serve our local community through various outreach initiatives.
+                        </p>
+                        <div class="group-actions">
+                            <div class="group-members">
+                                <div class="member-avatar">JD</div>
+                                <div class="member-avatar">SM</div>
+                                <span class="member-count">+15 more</span>
+                            </div>
+                            <a href="#" class="group-btn primary">Join Team</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group-card">
+                    <div class="group-image">
+                        <img src="https://source.unsplash.com/random/400x300/?youth" alt="Group image">
+                        <span class="group-badge">Youth</span>
+                    </div>
+                    <div class="group-info">
+                        <h3 class="group-name">Youth Group (Grades 6-12)</h3>
+                        <div class="group-leader">
+                            <div class="group-leader-avatar">KW</div>
+                            <span>Led by Kevin Williams</span>
+                        </div>
+                        <div class="group-meta">
+                            <div class="group-meta-item">
+                                <i class="fas fa-map-marker-alt"></i> Church Campus
+                            </div>
+                            <div class="group-meta-item">
+                                <i class="far fa-clock"></i> Fri, 7:00 PM
+                            </div>
+                        </div>
+                        <p class="group-description">
+                            Fun, fellowship and faith-building for middle and high school students.
+                        </p>
+                        <div class="group-actions">
+                            <div class="group-members">
+                                <div class="member-avatar">AL</div>
+                                <div class="member-avatar">PT</div>
+                                <span class="member-count">+20 more</span>
+                            </div>
+                            <a href="#" class="group-btn outline">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- My Groups Section -->
+            <div class="my-groups">
+                <div class="section-header">
+                    <h2 class="section-title">My Groups</h2>
+                    <a href="#" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                        View All
+                    </a>
+                </div>
+                
+                <div class="groups-grid">
+                    <div class="group-card">
+                        <div class="group-image">
+                            <img src="https://source.unsplash.com/random/400x300/?couples" alt="Group image">
+                            <span class="group-badge">Life Group</span>
+                        </div>
+                        <div class="group-info">
+                            <h3 class="group-name">Young Married Couples</h3>
+                            <div class="group-leader">
+                                <div class="group-leader-avatar">RJ</div>
+                                <span>Led by Robert Johnson</span>
+                            </div>
+                            <div class="group-meta">
+                                <div class="group-meta-item">
+                                    <i class="fas fa-map-marker-alt"></i> Eastside
+                                </div>
+                                <div class="group-meta-item">
+                                    <i class="far fa-clock"></i> Sun, 5:00 PM
+                                </div>
+                            </div>
+                            <p class="group-description">
+                                Building strong marriages centered on Christ through fellowship and study.
+                            </p>
+                            <div class="group-actions">
+                                <div class="group-members">
+                                    <div class="member-avatar">JD</div>
+                                    <div class="member-avatar">SM</div>
+                                    <span class="member-count">+4 more</span>
+                                </div>
+                                <a href="#" class="group-btn outline">Group Home</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="group-card">
+                        <div class="group-image">
+                            <i class="fas fa-music"></i>
+                            <span class="group-badge">Serving</span>
+                        </div>
+                        <div class="group-info">
+                            <h3 class="group-name">Worship Team</h3>
+                            <div class="group-leader">
+                                <div class="group-leader-avatar">AL</div>
+                                <span>Led by Anna Lee</span>
+                            </div>
+                            <div class="group-meta">
+                                <div class="group-meta-item">
+                                    <i class="fas fa-map-marker-alt"></i> Church Campus
+                                </div>
+                                <div class="group-meta-item">
+                                    <i class="far fa-clock"></i> Wed, 6:00 PM
+                                </div>
+                            </div>
+                            <p class="group-description">
+                                Leading the church in worship through music and creative arts.
+                            </p>
+                            <div class="group-actions">
+                                <div class="group-members">
+                                    <div class="member-avatar">JD</div>
+                                    <div class="member-avatar">KW</div>
+                                    <span class="member-count">+8 more</span>
+                                </div>
+                                <a href="#" class="group-btn outline">Team Home</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            mobileMenuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', function(event) {
+                if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            });
+            
+            sidebar.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>

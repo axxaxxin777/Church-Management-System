@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grace Community Church - Events</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Same CSS as dashboard.html */
+        :root {
+            --primary: #6d4c41;
+            --secondary: #8d6e63;
+            --accent: #d7ccc8;
+            --light: #efebe9;
+            --dark: #3e2723;
+            --text: #333;
+            --white: #fff;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --info: #2196f3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text);
+            background-color: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, rgba(109, 76, 65, 0.95) 0%, rgba(61, 39, 35, 0.95) 100%);
+            color: var(--white);
+            padding: 1.5rem 0;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-logo i {
+            font-size: 2rem;
+            margin-right: 0.75rem;
+            color: var(--accent);
+        }
+
+        .sidebar-logo-text h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .sidebar-logo-text p {
+            font-size: 0.75rem;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .user-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .user-info p {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .sidebar-menu {
+            padding: 0 1rem;
+        }
+
+        .menu-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin: 1.5rem 0 0.75rem;
+            padding-left: 0.5rem;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 5px;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item i {
+            width: 24px;
+            margin-right: 0.75rem;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .menu-item span {
+            font-size: 0.9rem;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+        }
+
+        .menu-item.active {
+            background-color: var(--accent);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .menu-item.active i {
+            color: var(--primary);
+        }
+
+        .menu-item .badge {
+            margin-left: auto;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 10px;
+            padding: 0.15rem 0.5rem;
+            font-size: 0.7rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid var(--accent);
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(109, 76, 65, 0.1);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-size: 1.25rem;
+            margin-right: 1rem;
+            cursor: pointer;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-dropdown-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .user-dropdown-name {
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .user-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            padding: 0.5rem 0;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(10px);
+        }
+
+        .user-dropdown:hover .user-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--light);
+            color: var(--primary);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--accent);
+            margin: 0.25rem 0;
+        }
+
+        /* Events Content */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .page-title p {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .page-actions .btn {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background-color: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .page-actions .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-actions .btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Calendar View */
+        .calendar-view {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .calendar-nav-btn {
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .calendar-month {
+            margin: 0 1rem;
+            font-weight: 600;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--secondary);
+            padding: 0.5rem;
+        }
+
+        .calendar-day {
+            background-color: var(--light);
+            border-radius: 4px;
+            padding: 0.5rem;
+            min-height: 80px;
+            position: relative;
+        }
+
+        .calendar-day.empty {
+            background-color: transparent;
+        }
+
+        .calendar-day-number {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .calendar-day.today .calendar-day-number {
+            color: var(--primary);
+        }
+
+        .calendar-event {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .calendar-event:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Events List */
+        .events-list {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .events-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--accent);
+        }
+
+        .events-list-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .event-filters {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--light);
+            border: none;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .filter-btn:hover {
+            background-color: var(--accent);
+        }
+
+        .event-item {
+            display: flex;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .event-item:last-child {
+            border-bottom: none;
+        }
+
+        .event-date {
+            width: 60px;
+            height: 60px;
+            background-color: var(--light);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .event-day {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .event-month {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--secondary);
+        }
+
+        .event-content {
+            flex: 1;
+        }
+
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .event-description {
+            font-size: 0.85rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-meta {
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--secondary);
+        }
+
+        .event-meta i {
+            margin-right: 0.25rem;
+        }
+
+        .event-meta span {
+            margin-right: 1rem;
+        }
+
+        .event-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .event-actions .btn {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .event-actions .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            border: 1px solid var(--primary);
+        }
+
+        .event-actions .btn-primary:hover {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+        }
+
+        .event-actions .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .event-actions .btn-outline:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 220px;
+            }
+            
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-bar {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .page-actions {
+                margin-top: 1rem;
+                width: 100%;
+            }
+            
+            .page-actions .btn {
+                display: block;
+                text-align: center;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+            
+            .calendar-day {
+                min-height: 60px;
+            }
+            
+            .event-filters {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .calendar-day-header {
+                font-size: 0.7rem;
+            }
+            
+            .calendar-day {
+                min-height: 50px;
+                padding: 0.25rem;
+            }
+            
+            .calendar-event {
+                font-size: 0.6rem;
+                padding: 0.1rem 0.3rem;
+            }
+            
+            .event-item {
+                flex-direction: column;
+            }
+            
+            .event-date {
+                margin-bottom: 0.5rem;
+            }
+            
+            .event-actions {
+                justify-content: flex-start;
+            }
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Mobile Menu Toggle -->
+        <div class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-church"></i>
+                    <div class="sidebar-logo-text">
+                        <h2>Grace Community</h2>
+                        <p>Events Calendar</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <h4>John Doe</h4>
+                    <p>Member since 2020</p>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <p class="menu-title">Main</p>
+                <a href="dashboard.html" class="menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="events.html" class="menu-item active">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Events</span>
+                </a>
+                <a href="sermons.html" class="menu-item">
+                    <i class="fas fa-video"></i>
+                    <span>Sermons</span>
+                </a>
+                <a href="giving.html" class="menu-item">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span>Giving</span>
+                </a>
+                
+                <p class="menu-title">Community</p>
+                <a href="groups.html" class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Groups</span>
+                </a>
+                <a href="prayer-requests.html" class="menu-item">
+                    <i class="fas fa-pray"></i>
+                    <span>Prayer Requests</span>
+                    <span class="badge">3</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Serving</span>
+                </a>
+                
+                <p class="menu-title">Personal</p>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search events...">
+                </div>
+                
+                <div class="user-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">2</span>
+                    </button>
+                    
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-avatar">JD</div>
+                        <span class="user-dropdown-name">John Doe</span>
+                        <i class="fas fa-chevron-down"></i>
+                        
+                        <div class="user-dropdown-menu">
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user mr-2"></i> My Profile
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog mr-2"></i> Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>Events Calendar</h1>
+                    <p>View and register for upcoming events at Grace Community</p>
+                </div>
+                <div class="page-actions">
+                    <a href="#" class="btn">
+                        <i class="fas fa-plus"></i> Create Event
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Calendar View -->
+            <div class="calendar-view">
+                <div class="calendar-header">
+                    <h3 class="calendar-title">June 2023</h3>
+                    <div class="calendar-nav">
+                        <button class="calendar-nav-btn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="calendar-month">June 2023</span>
+                        <button class="calendar-nav-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="calendar-grid">
+                    <div class="calendar-day-header">Sun</div>
+                    <div class="calendar-day-header">Mon</div>
+                    <div class="calendar-day-header">Tue</div>
+                    <div class="calendar-day-header">Wed</div>
+                    <div class="calendar-day-header">Thu</div>
+                    <div class="calendar-day-header">Fri</div>
+                    <div class="calendar-day-header">Sat</div>
+                    
+                    <div class="calendar-day empty"></div>
+                    <div class="calendar-day empty"></div>
+                    <div class="calendar-day empty"></div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">1</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">2</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">3</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">4</div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">5</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">6</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">7</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">8</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">9</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">10</div>
+                        <div class="calendar-event">Bible Study</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">11</div>
+                        <div class="calendar-event">Sunday Service</div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">12</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">13</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">14</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">15</div>
+                        <div class="calendar-event">Community Outreach</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">16</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">17</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">18</div>
+                        <div class="calendar-event">Men's Breakfast</div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">19</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">20</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">21</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">22</div>
+                        <div class="calendar-event">Bible Conference</div>
+                    </div>
+                    <div class="calendar-day today">
+                        <div class="calendar-day-number">23</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">24</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">25</div>
+                        <div class="calendar-event">Sunday Service</div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">26</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">27</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">28</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">29</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">30</div>
+                    </div>
+                    <div class="calendar-day empty"></div>
+                    <div class="calendar-day empty"></div>
+                </div>
+            </div>
+            
+            <!-- Events List -->
+            <div class="events-list">
+                <div class="events-list-header">
+                    <h3 class="events-list-title">Upcoming Events</h3>
+                    <div class="event-filters">
+                        <button class="filter-btn active">All</button>
+                        <button class="filter-btn">This Week</button>
+                        <button class="filter-btn">Next Week</button>
+                        <button class="filter-btn">This Month</button>
+                    </div>
+                </div>
+                
+                <div class="event-item">
+                    <div class="event-date">
+                        <div class="event-day">15</div>
+                        <div class="event-month">Jun</div>
+                    </div>
+                    <div class="event-content">
+                        <h4 class="event-title">Community Outreach Day</h4>
+                        <p class="event-description">Join us as we serve our local community through various outreach activities.</p>
+                        <div class="event-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> City Park</span>
+                            <span><i class="far fa-clock"></i> 9:00 AM - 2:00 PM</span>
+                            <span><i class="fas fa-users"></i> 24 attending</span>
+                        </div>
+                        <div class="event-actions">
+                            <a href="#" class="btn btn-primary">RSVP</a>
+                            <a href="#" class="btn btn-outline">Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="event-item">
+                    <div class="event-date">
+                        <div class="event-day">18</div>
+                        <div class="event-month">Jun</div>
+                    </div>
+                    <div class="event-content">
+                        <h4 class="event-title">Men's Breakfast</h4>
+                        <p class="event-description">Monthly gathering for men of all ages featuring fellowship and teaching.</p>
+                        <div class="event-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> Fellowship Hall</span>
+                            <span><i class="far fa-clock"></i> 8:00 AM - 10:00 AM</span>
+                            <span><i class="fas fa-users"></i> 18 attending</span>
+                        </div>
+                        <div class="event-actions">
+                            <a href="#" class="btn btn-primary">RSVP</a>
+                            <a href="#" class="btn btn-outline">Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="event-item">
+                    <div class="event-date">
+                        <div class="event-day">22</div>
+                        <div class="event-month">Jun</div>
+                    </div>
+                    <div class="event-content">
+                        <h4 class="event-title">Summer Bible Conference</h4>
+                        <p class="event-description">Three days of worship and teaching with guest speaker Dr. Michael Thompson.</p>
+                        <div class="event-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> Sanctuary</span>
+                            <span><i class="far fa-clock"></i> 6:00 PM - 8:30 PM</span>
+                            <span><i class="fas fa-users"></i> 87 attending</span>
+                        </div>
+                        <div class="event-actions">
+                            <a href="#" class="btn btn-primary">Register</a>
+                            <a href="#" class="btn btn-outline">Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="event-item">
+                    <div class="event-date">
+                        <div class="event-day">25</div>
+                        <div class="event-month">Jun</div>
+                    </div>
+                    <div class="event-content">
+                        <h4 class="event-title">Sunday Service</h4>
+                        <p class="event-description">Weekly worship service with communion. Sermon: "Living by Faith"</p>
+                        <div class="event-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> Sanctuary</span>
+                            <span><i class="far fa-clock"></i> 10:30 AM - 12:00 PM</span>
+                        </div>
+                        <div class="event-actions">
+                            <a href="#" class="btn btn-outline">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            mobileMenuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', function(event) {
+                if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            });
+            
+            sidebar.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+            
+            // Filter buttons functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    // Here you would typically filter the events list
+                });
+            });
+        });
+    </script>
+</body>
+</html>
