@@ -24,16 +24,24 @@ $stmt = $pdo->query("SELECT COUNT(*) as total_prayers FROM prayer_requests");
 $prayer_stats = $stmt->fetch();
 $total_prayers = $prayer_stats['total_prayers'];
 
-// Track visitor (simple session-based tracking)
+// Track visitor (session-based tracking with active_visitors table maintenance)
 $session_id = session_id();
 $ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
 $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
-// Update or insert visitor record
+// Update or insert visitor record in main visitors table
 $stmt = $pdo->prepare("INSERT INTO visitors (session_id, ip_address, user_agent) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE last_activity = CURRENT_TIMESTAMP");
 $stmt->execute([$session_id, $ip_address, $user_agent]);
 
-// Get current active visitors count (last 5 minutes)
+// Maintain active_visitors table (since we can't use VIEWs on shared hosting)
+// First, clean up old records (older than 5 minutes)
+$pdo->exec("DELETE FROM active_visitors WHERE last_activity < DATE_SUB(NOW(), INTERVAL 5 MINUTE)");
+
+// Then, update or insert current visitor in active_visitors table
+$stmt = $pdo->prepare("INSERT INTO active_visitors (session_id, ip_address, user_agent) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE last_activity = CURRENT_TIMESTAMP");
+$stmt->execute([$session_id, $ip_address, $user_agent]);
+
+// Get current active visitors count
 $stmt = $pdo->query("SELECT COUNT(*) as active_visitors FROM active_visitors");
 $visitor_stats = $stmt->fetch();
 $active_visitors = $visitor_stats['active_visitors'];
