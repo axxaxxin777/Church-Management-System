@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grace Community Church - Giving</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Same CSS as dashboard.html */
+        :root {
+            --primary: #6d4c41;
+            --secondary: #8d6e63;
+            --accent: #d7ccc8;
+            --light: #efebe9;
+            --dark: #3e2723;
+            --text: #333;
+            --white: #fff;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --info: #2196f3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text);
+            background-color: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, rgba(109, 76, 65, 0.95) 0%, rgba(61, 39, 35, 0.95) 100%);
+            color: var(--white);
+            padding: 1.5rem 0;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-logo i {
+            font-size: 2rem;
+            margin-right: 0.75rem;
+            color: var(--accent);
+        }
+
+        .sidebar-logo-text h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .sidebar-logo-text p {
+            font-size: 0.75rem;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .user-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .user-info p {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .sidebar-menu {
+            padding: 0 1rem;
+        }
+
+        .menu-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin: 1.5rem 0 0.75rem;
+            padding-left: 0.5rem;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 5px;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item i {
+            width: 24px;
+            margin-right: 0.75rem;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .menu-item span {
+            font-size: 0.9rem;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+        }
+
+        .menu-item.active {
+            background-color: var(--accent);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .menu-item.active i {
+            color: var(--primary);
+        }
+
+        .menu-item .badge {
+            margin-left: auto;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 10px;
+            padding: 0.15rem 0.5rem;
+            font-size: 0.7rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid var(--accent);
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(109, 76, 65, 0.1);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-size: 1.25rem;
+            margin-right: 1rem;
+            cursor: pointer;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-dropdown-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .user-dropdown-name {
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .user-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            padding: 0.5rem 0;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(10px);
+        }
+
+        .user-dropdown:hover .user-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--light);
+            color: var(--primary);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--accent);
+            margin: 0.25rem 0;
+        }
+
+        /* Giving Content */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .page-title p {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .page-actions .btn {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background-color: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .page-actions .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-actions .btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Giving Options */
+        .giving-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .giving-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .giving-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .giving-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(109, 76, 65, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .giving-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .giving-description {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .giving-btn {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background-color: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .giving-btn:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Giving History */
+        .giving-history {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--accent);
+        }
+
+        .history-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .history-actions a {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .history-actions a:hover {
+            color: var(--primary);
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th {
+            text-align: left;
+            padding: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--secondary);
+            border-bottom: 1px solid var(--accent);
+        }
+
+        .history-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--light);
+            font-size: 0.9rem;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-amount {
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .history-method {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--light);
+            border-radius: 50px;
+            font-size: 0.8rem;
+        }
+
+        .history-method i {
+            margin-right: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        .history-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .history-status.completed {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+        }
+
+        .history-status.pending {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning);
+        }
+
+        .history-actions-cell {
+            text-align: right;
+        }
+
+        .history-action {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+        }
+
+        .history-action:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 220px;
+            }
+            
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .giving-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-bar {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .page-actions {
+                margin-top: 1rem;
+                width: 100%;
+            }
+            
+            .page-actions .btn {
+                display: block;
+                text-align: center;
+            }
+            
+            .giving-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .history-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .history-table th, 
+            .history-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+            
+            .history-action {
+                display: block;
+                margin: 0.5rem 0 0;
+                text-align: center;
+            }
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Mobile Menu Toggle -->
+        <div class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-church"></i>
+                    <div class="sidebar-logo-text">
+                        <h2>Grace Community</h2>
+                        <p>Giving Center</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <h4>John Doe</h4>
+                    <p>Member since 2020</p>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <p class="menu-title">Main</p>
+                <a href="dashboard.html" class="menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="events.html" class="menu-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Events</span>
+                </a>
+                <a href="sermons.html" class="menu-item">
+                    <i class="fas fa-video"></i>
+                    <span>Sermons</span>
+                </a>
+                <a href="giving.html" class="menu-item active">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span>Giving</span>
+                </a>
+                
+                <p class="menu-title">Community</p>
+                <a href="groups.html" class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Groups</span>
+                </a>
+                <a href="prayer-requests.html" class="menu-item">
+                    <i class="fas fa-pray"></i>
+                    <span>Prayer Requests</span>
+                    <span class="badge">3</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Serving</span>
+                </a>
+                
+                <p class="menu-title">Personal</p>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search giving history...">
+                </div>
+                
+                <div class="user-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">2</span>
+                    </button>
+                    
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-avatar">JD</div>
+                        <span class="user-dropdown-name">John Doe</span>
+                        <i class="fas fa-chevron-down"></i>
+                        
+                        <div class="user-dropdown-menu">
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user mr-2"></i> My Profile
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog mr-2"></i> Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>Giving Center</h1>
+                    <p>Support the ministry of Grace Community Church through your generous giving</p>
+                </div>
+                <div class="page-actions">
+                    <a href="#" class="btn">
+                        <i class="fas fa-file-invoice-dollar"></i> Tax Statements
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Giving Options -->
+            <div class="giving-options">
+                <div class="giving-card">
+                    <div class="giving-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3 class="giving-title">One-Time Gift</h3>
+                    <p class="giving-description">
+                        Make a single donation to support the general fund or a specific ministry.
+                    </p>
+                    <a href="#" class="giving-btn">Give Now</a>
+                </div>
+                
+                <div class="giving-card">
+                    <div class="giving-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3 class="giving-title">Recurring Giving</h3>
+                    <p class="giving-description">
+                        Set up automatic recurring donations for consistent support.
+                    </p>
+                    <a href="#" class="giving-btn">Set Up</a>
+                </div>
+                
+                <div class="giving-card">
+                    <div class="giving-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="giving-title">Text Giving</h3>
+                    <p class="giving-description">
+                        Text "GIVE" to (555) 123-4567 to give quickly from your mobile device.
+                    </p>
+                    <a href="#" class="giving-btn">Learn More</a>
+                </div>
+                
+                <div class="giving-card">
+                    <div class="giving-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3 class="giving-title">Mail a Check</h3>
+                    <p class="giving-description">
+                        Send checks to: Grace Community Church, 123 Church St, Anytown, ST 12345
+                    </p>
+                    <a href="#" class="giving-btn">Get Directions</a>
+                </div>
+            </div>
+            
+            <!-- Giving History -->
+            <div class="giving-history">
+                <div class="history-header">
+                    <h3 class="history-title">Your Giving History</h3>
+                    <div class="history-actions">
+                        <a href="#">View All</a>
+                    </div>
+                </div>
+                
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Jun 12, 2023</td>
+                            <td>General Fund</td>
+                            <td class="history-amount">$150.00</td>
+                            <td>
+                                <span class="history-method">
+                                    <i class="fab fa-cc-visa"></i> Visa
+                                </span>
+                            </td>
+                            <td>
+                                <span class="history-status completed">
+                                    Completed
+                                </span>
+                            </td>
+                            <td class="history-actions-cell">
+                                <a href="#" class="history-action">Receipt</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jun 5, 2023</td>
+                            <td>Missions Fund</td>
+                            <td class="history-amount">$50.00</td>
+                            <td>
+                                <span class="history-method">
+                                    <i class="fas fa-mobile-alt"></i> Text
+                                </span>
+                            </td>
+                            <td>
+                                <span class="history-status completed">
+                                    Completed
+                                </span>
+                            </td>
+                            <td class="history-actions-cell">
+                                <a href="#" class="history-action">Receipt</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>May 29, 2023</td>
+                            <td>Building Fund</td>
+                            <td class="history-amount">$200.00</td>
+                            <td>
+                                <span class="history-method">
+                                    <i class="fas fa-university"></i> Bank
+                                </span>
+                            </td>
+                            <td>
+                                <span class="history-status completed">
+                                    Completed
+                                </span>
+                            </td>
+                            <td class="history-actions-cell">
+                                <a href="#" class="history-action">Receipt</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>May 22, 2023</td>
+                            <td>General Fund (Recurring)</td>
+                            <td class="history-amount">$100.00</td>
+                            <td>
+                                <span class="history-method">
+                                    <i class="fab fa-cc-mastercard"></i> Mastercard
+                                </span>
+                            </td>
+                            <td>
+                                <span class="history-status pending">
+                                    Pending
+                                </span>
+                            </td>
+                            <td class="history-actions-cell">
+                                <a href="#" class="history-action">Details</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            mobileMenuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', function(event) {
+                if (!sidebar.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            });
+            
+            sidebar.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>

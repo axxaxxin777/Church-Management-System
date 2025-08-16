@@ -1,0 +1,34 @@
+2025-08-14 04:21:34 - Failed Login Attempt - Email: jmsof777@gmail.com - IP: ::1
+2025-08-14 04:21:41 - Failed Login Attempt - Email: jmsof777@gmail.com - IP: ::1
+2025-08-14 04:21:48 - Successful Login - User ID: 22 - IP: ::1
+2025-08-14 04:22:27 - Password Reset Requested - Email: jmsof777@gmail.com, Token: 079a529a2383230f1930ec32201bb70c616ced4488807099850654cfee44d35a - IP: ::1
+2025-08-14 04:23:21 - Successful Login - User ID: 22 - IP: ::1
+2025-08-14 04:28:24 - CSRF Attack - Login form - IP: ::1
+2025-08-14 04:28:54 - Failed Login Attempt - Email: admin@gracecommunity.org - IP: ::1
+2025-08-14 04:29:07 - Failed Login Attempt - Email: johnmilsof@gmail.com - IP: ::1
+2025-08-14 04:29:54 - Failed Login Attempt - Email: johnmilsof@gmail.com - IP: ::1
+2025-08-14 04:30:02 - Failed Login Attempt - Email: johnmilsof@gmail.com - IP: ::1
+2025-08-14 04:33:51 - Failed Login Attempt - Email: admin@gracecommunity.org - IP: ::1
+2025-08-14 04:34:21 - Failed Login Attempt - Email: admin@gracecommunity.org - IP: ::1
+2025-08-14 04:34:31 - Failed Login Attempt - Email: jmsof777@gmail.com - IP: ::1
+2025-08-14 04:35:30 - Failed Login Attempt - Email: jmsof777@gmail.com - IP: ::1
+2025-08-14 04:35:50 - Failed Login Attempt - Email: jmsof777@gmail.com - IP: ::1
+2025-08-14 04:36:00 - Password Reset Requested - Email: jmsof777@gmail.com, Token: 4e9cc3f16148f888fe7636f8d368c0fc10e47d0e5f65a41da77ee21bf00ae0f0 - IP: ::1
+2025-08-14 04:36:51 - Successful Login - User ID: 22 - IP: ::1
+2025-08-14 04:37:47 - Successful Login - User ID: 1 - IP: ::1
+2025-08-14 04:52:29 - Successful Login - User ID: 1 - IP: ::1
+2025-08-14 05:04:54 - Successful Login - User ID: 1 - IP: ::1
+2025-08-14 05:07:45 - Successful Login - User ID: 1 - IP: ::1
+2025-08-14 05:22:57 - Successful Login - User ID: 1 - IP: ::1
+2025-08-14 06:02:03 - Successful Login - User ID: 22 - IP: ::1
+2025-08-14 06:04:02 - Successful Login - User ID: 1 - IP: ::1
+2025-08-14 07:46:54 - Successful Login - User ID: 22 - IP: ::1
+2025-08-14 07:50:17 - Failed Login Attempt - Email: admin@jbf.com - IP: ::1
+2025-08-14 07:50:23 - Failed Login Attempt - Email: admin@jbf.com - IP: ::1
+2025-08-14 07:51:01 - Successful Login - User ID: 1 - IP: ::1
+2025-08-14 08:35:42 - Failed Login Attempt - Email: admin@jbf.com - IP: ::1
+2025-08-14 08:35:53 - Successful Login - User ID: 1 - IP: ::1
+2025-08-16 13:41:57 - Email Send Failed - Password reset: SMTP Error: Could not authenticate. - IP: ::1
+2025-08-16 13:45:47 - Email Send Failed - Password reset: SMTP Error: Could not authenticate. - IP: ::1
+2025-08-16 13:53:35 - Password Reset Requested - Email: rayandisangcopan1@gmail.com, Token: 09b726c9118b47bff0fa4fca2183d1de7b02cd9208350c57b9311a851389cf66 - IP: ::1
+2025-08-16 14:24:13 - Successful Login - User ID: 3 - IP: ::1

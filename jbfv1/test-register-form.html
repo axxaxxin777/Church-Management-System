@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Registration</title>
+</head>
+<body>
+    <h2>Test Registration Form</h2>
+    <?php
+    session_start();
+    // Generate CSRF token
+    if (!isset($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    ?>
+    <form method="POST" action="register.php">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+        <p>
+            <label>First Name:</label>
+            <input type="text" name="first_name" value="Test" required>
+        </p>
+        <p>
+            <label>Last Name:</label>
+            <input type="text" name="last_name" value="User" required>
+        </p>
+        <p>
+            <label>Email:</label>
+            <input type="email" name="email" value="test<?php echo time(); ?>@example.com" required>
+        </p>
+        <p>
+            <label>Phone:</label>
+            <input type="tel" name="phone" value="123-456-7890">
+        </p>
+        <p>
+            <label>Password:</label>
+            <input type="password" name="password" value="Test123!" required>
+        </p>
+        <p>
+            <label>Confirm Password:</label>
+            <input type="password" name="confirm_password" value="Test123!" required>
+        </p>
+        <p>
+            <input type="submit" name="register_submit" value="Register">
+        </p>
+    </form>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+    "name": "joy-bible-fellowship/church-system",
+    "description": "Joy Bible Fellowship Management System",
+    "type": "project",
+    "require": {
+        "phpmailer/phpmailer": "^6.10",
+        "pusher/pusher-php-server": "7.2"
+    },
+    "authors": [
+        {
+            "name": "Joy Bible Fellowship",
+            "email": "info@joybiblefellowship.org"
+        }
+    ]
+}
